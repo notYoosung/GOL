@@ -1,5 +1,5 @@
-/* *///
-(function() {
+void (/\/*/);
+; (function() {
     var window = this;
     if (!window.__disableLoopProtection__) {
         window.__disableLoopProtection__ = true;
@@ -33,22 +33,42 @@ var settings = {
     gridSize: 128,
 };
 
+
+/**
+ * Camera
+ */
+var cam = (function() {
+    var cam = {
+        internals: {
+            x: 0,
+            y: 0
+        },
+        set x(val) {
+            this.internals.x = val;
+        },
+        get x() {
+            return this.internals.x;
+        }
+    };
+})();
+
+
+/**
+ * Grid/map
+ */
 var grid = [];
-for (var i = 0; i < settings.gridSize; i++) {
-    grid[i] = [];
-    for (var j = 0; j < settings.gridSize; j++) {
-        grid[i][j] = ' ';
-    }
-}
 
 function setGrid(x, y, setTo) {
+    if (grid[y] === undefined) {
+        grid[y] = [];
+    }
     grid[y][x] = setTo;
 }
 function getGrid(x, y) {
     return grid[y][x];
 }
-setGrid(0, 0, '1');
-println(getGrid(0, 0));
+setGrid(-10, 0, '1');
+println(getGrid(-10, 0));
 
 
 void (1 || random());
