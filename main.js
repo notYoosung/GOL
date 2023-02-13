@@ -36,6 +36,31 @@ Object.constructor.prototype.new = (function() {
     return obj;
 });
 
+
+var keys = (function() {
+    var keys = {};
+    keyPressed = function() {
+        keys['_' + key.toString().toLowerCase()] = true;
+        keys[keyCode] = true;
+        keys.pressed = true;
+        keys.down = true;
+        keys.up = false;
+        keys.pressedCode = keyCode;
+        keys.pressedKey = key.toString().toLowerCase();
+    };
+    keyReleased = function() {
+        keys['_' + key.toString().toLowerCase()] = false;
+        keys[keyCode] = false;
+        keys.released = true;
+        keys.down = false;
+        keys.up = true;
+        keys.releasedCode = keyCode;
+        keys.releasedKey = key.toString().toLowerCase();
+    };
+    return keys;
+})();
+
+
 function isThing(something) {
     return something !== undefined && something !== null;
 }
@@ -125,20 +150,31 @@ function getGrid(x, y) {
 }
 function gridToCart(x, y) {
     return {
-        x: (settings.unitSize * x),
-        y: (settings.unitSize * y)
+        x: (settings.unitSize * x) + cam.offsetX,
+        y: (settings.unitSize * y) + cam.offsetY
     };
 }
 
+textSize(settings.unitSize);
+fill(0);
 setGrid(-10, -2, '1');
-Object.keys(grid).forEach(function(yPos) {
-    Object.keys(grid[yPos]).forEach(function(xPos) {
-        println(getGrid(xPos, yPos));
-    });
-});
+setGrid(10, 2, '1');
 
 draw = function() {
     background(255);
-    ellipse(cam.offsetX, cam.offsetY, 10, 10);
+
+    if (keys[LEFT]) {
+        cam.x = cam.x - 1;
+    }
+
+    cam.updateCam();
+
+    Object.keys(grid).forEach(function(yPos) {
+        Object.keys(grid[yPos]).forEach(function(xPos) {
+            text(grid[yPos][xPos], xPos * settings.unitSize + cam.offsetX, yPos * settings.unitSize + cam.offsetY);
+        });
+    });
+
 };
 
+void (1 || random());
